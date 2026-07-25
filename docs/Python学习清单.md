@@ -130,6 +130,77 @@ df["ret5_chg"] = df["ret5"].diff(5)             # 5 日收益的变化 = 动量�
 df["ma5"] = df.groupby("code")["close"].transform(lambda s: s.rolling(5).mean())
 ```
 
+### 3.5 关于 NumPy：不单独学，穿插学（半天到 1 天）
+
+**结论：NumPy 不作为独立学习阶段。** Pandas 本身建在 NumPy 之上，
+写 `df["close"].rolling(5).mean()` 时底层就是 NumPy 在算 —— 你一直在用它，
+但不需要直接面对它。
+
+#### 实际会用到的只有七个
+
+| 用法 | 干什么 | 用在哪 |
+|------|--------|--------|
+| **`np.where`** | 条件赋值（≈ SQL 的 `CASE WHEN`） | ⭐ **做三分类标签，必用** |
+| `np.nan` | 缺失值 | 到处 |
+| `np.sqrt` | 开方 | 波动率换算（√N 阈值） |
+| `np.log` | 对数 | 对数收益率 |
+| `np.sign` | 取符号 | 判断方向 |
+| `np.clip` | 截断极值 | 处理异常值 |
+| `.to_numpy()` | 转成数组 | 喂给 LightGBM |
+
+#### 本项目会真实写出的代码（第 16 周左右）
+
+```python
+import numpy as np
+
+# 未来 5 日收益率（标签可以用未来信息）
+fwd_ret = df["close"].pct_change(5).shift(-5)
+
+# 波动率自适应阈值：近 20 日日波动率 × √5
+vol = df["close"].pct_change().rolling(20).std()
+thr = 1.0 * vol * np.sqrt(5)
+
+# 三分类（np.where 嵌套，相当于 SQL 的 CASE WHEN）
+df["label"] = np.where(fwd_ret >  thr,  1,      # 上升
+                np.where(fwd_ret < -thr, -1,     # 下降
+                                          0))    # 盘整
+```
+
+> 整段代码里 NumPy 只出现两次（`np.sqrt`、`np.where`）。**这就是所需的 NumPy 水平。**
+> 对 SQL 背景者：`np.where(条件, 真值, 假值)` 就是 `CASE WHEN ... THEN ... ELSE ... END`。
+
+#### 明确不学
+
+❌ 多维 `ndarray`（2 维以上）· ❌ `reshape` / `transpose` / axis 复杂操作
+❌ **广播机制细节规则** · ❌ `np.linalg`（矩阵求逆、特征值） · ❌ 随机数高级用法
+❌ 结构化数组 · ❌ `np.einsum`
+
+> 这些是给做图像、深度学习、数值计算的人用的。做表格数据一辈子用不上。
+
+#### ⭐ 唯一真正重要的概念：向量化思维
+
+```python
+# ❌ 循环写法（C# 习惯，几万行会慢到无法接受）
+returns = []
+for i in range(1, len(prices)):
+    returns.append(prices[i] / prices[i-1] - 1)
+
+# ✅ 向量化写法（一行，快几百倍）
+returns = df["close"].pct_change()
+```
+
+> 🚨 **来自 C# 的人最容易犯的错，就是习惯性写 `for` 循环。**
+> 在 Pandas / NumPy 里，**看到自己在用 for 循环遍历数据行，就该停下来问：有没有向量化写法？**
+> 答案通常是"有"。
+
+这不只是风格问题，而是**本项目的实际约束**：方案 2 要在 2 分钟内扫描 5000 只股票，
+**只有向量化才做得到**。
+
+**时间安排**：穿插在第 3–6 周 Pandas 阶段，遇到就查，总投入半天到 1 天。
+优先级远低于 `shift` / `rolling` / `diff`。**省下的时间全部投给 Pandas 时序操作。**
+
+---
+
 ### 3.4 Pandas 五个必踩的坑（提前知道能省几十小时）
 
 1. **`SettingWithCopyWarning`** —— 链式索引赋值 `df[a][b] = x` 无效。
