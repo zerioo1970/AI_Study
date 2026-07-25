@@ -13,7 +13,8 @@ AI 学习记录仓库。
 | [docs/AI学习路线图.md](docs/AI学习路线图.md) | **主文档**：学习路线、六个月计划、时间序列六大陷阱 |
 | [docs/A股转折点检测方案.md](docs/A股转折点检测方案.md) | **技术方案**：A 股特有陷阱、标签设计、验证方案、成功标准 |
 | [docs/决策时点设计.md](docs/决策时点设计.md) | **方案 1 / 方案 2** 的信息边界与训练-推理一致性铁律 |
-| [docs/Python学习清单.md](docs/Python学习清单.md) | **当前任务**：12 周 Python + Pandas 可验收清单 |
+| [docs/Python学习详细步骤.md](docs/Python学习详细步骤.md) | ⭐ **现在从这里开始**：装环境 → Day 1–14 逐日代码 → Pandas → A 股实战 |
+| [docs/Python学习清单.md](docs/Python学习清单.md) | 12 周 Python + Pandas 学习清单（"学什么"，上文是"怎么做"） |
 | [docs/指标热力图与图像化方法.md](docs/指标热力图与图像化方法.md) | 已有 150 指标可视化资产的评估、气泡矩阵/双向堆叠/山脊图、ROCKET 替代 CNN |
 | [docs/泄漏排查与Z轴排序.md](docs/泄漏排查与Z轴排序.md) | **泄漏排查结论**、归一化修复方案、相似度度量与 Z 轴两级排序 |
 | [docs/技术雷达.md](docs/技术雷达.md) | 最新 AI 成果跟踪与相关性评估（TabPFN、ROCKET、TSFM 等） |
@@ -63,7 +64,10 @@ akshare 取数（后复权）
 
 ## 当前进度
 
-**当前阶段：Python / Pandas 基础学习期** → [12 周清单](docs/Python学习清单.md)
+**当前阶段：Python / Pandas 基础学习期**
+→ ⭐ **[详细步骤（逐日照做）](docs/Python学习详细步骤.md)** · [12 周清单](docs/Python学习清单.md)
+
+**下一步就三件事**：① 装 Anaconda ② 跑通 `print("你好，Python")` ③ 开始 Day 1
 
 | 阶段 | 周次 | 内容 | 状态 |
 |------|------|------|------|
