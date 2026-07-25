@@ -1,0 +1,30 @@
+# 数据文件不纳入版本控制
+data/
+*.csv
+*.xlsx
+*.xls
+*.parquet
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# 模型文件
+*.pkl
+*.joblib
+*.txt.model
+models/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
